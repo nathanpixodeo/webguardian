@@ -55,7 +55,7 @@ This project adheres to a code of conduct that promotes respectful and construct
 ### Installation
 
 ```bash
-git clone https://github.com/webguardian/scanner.git
+git clone https://github.com/nathanpixodeo/web-guardian.git
 cd scanner
 composer install
 ```

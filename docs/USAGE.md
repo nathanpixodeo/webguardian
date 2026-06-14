@@ -13,20 +13,20 @@
 
 ```bash
 # Install globally
-composer global require webguardian/scanner
+composer global require nathanpixodeo/web-guardian
 
 # Or create a new project
-composer create-project webguardian/scanner .
+composer create-project nathanpixodeo/web-guardian .
 
 # Or add to existing project
-composer require --dev webguardian/scanner
+composer require --dev nathanpixodeo/web-guardian
 ```
 
 ### Manual Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/webguardian/scanner.git
+git clone https://github.com/nathanpixodeo/web-guardian.git
 cd webguardian
 
 # Install dependencies

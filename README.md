@@ -80,22 +80,22 @@
 ### Via Composer
 
 ```bash
-composer create-project webguardian/scanner my-security-scan
+composer create-project nathanpixodeo/web-guardian my-security-scan
 ```
 
 ### Manual Installation
 
 ```bash
-git clone https://github.com/webguardian/scanner.git
-cd webguardian
+git clone https://github.com/nathanpixodeo/web-guardian.git
+cd web-guardian
 composer install
 ```
 
 ### Quick Install (No Composer)
 
 ```bash
-git clone https://github.com/webguardian/scanner.git
-cd webguardian
+git clone https://github.com/nathanpixodeo/web-guardian.git
+cd web-guardian
 php bin/webguardian scan /path/to/scan
 ```
 
@@ -612,8 +612,8 @@ jobs:
           php-version: '8.2'
       - name: Install WebGuardian
         run: |
-          git clone https://github.com/webguardian/scanner.git
-          cd scanner && composer install --no-dev
+          git clone https://github.com/nathanpixodeo/web-guardian.git
+          cd web-guardian && composer install --no-dev
       - name: Run Security Scan
         run: |
           php scanner/bin/webguardian scan . --format=json --output=report.json
@@ -678,8 +678,8 @@ Please read [CONTRIBUTING.md](docs/CONTRIBUTING.md) for details on our code of c
 ### Development Setup
 
 ```bash
-git clone https://github.com/webguardian/scanner.git
-cd webguardian
+git clone https://github.com/nathanpixodeo/web-guardian.git
+cd web-guardian
 composer install
 composer test
 ```
