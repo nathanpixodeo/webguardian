@@ -70,35 +70,71 @@ JSON-based rule definitions organized by category:
 - `wordpress-suspicious.json` — WordPress-specific threats
 - `laravel-backdoors.json` — Laravel-specific vulnerabilities
 - `generic-threats.json` — General web application threats
+- `external/` — Auto-updated rules from external sources (YARA, community feeds)
+
+External rules are loaded automatically by `MalwareDetector::loadExternalPatterns()` and merged with built-in patterns.
+
+### 8. Tools (`tools/`)
+
+Automation scripts for rule lifecycle management:
+
+| Tool | Function |
+|------|----------|
+| `update-rules.sh` | Downloads, converts (YARA→JSON), and merges external rules |
+| `yara-converter.php` | Converts YARA rule files to WebGuardian JSON schema |
+| `alert-on-critical.sh` | Email/Slack notification on critical findings |
+| `config/rules-sources.json` | Registry of external rule source URLs |
+| `config/crontab.example` | Ready-to-use cron job templates |
+
+### 9. Web Dashboard (`public/`)
+
+Tailwind CSS web interface providing:
+- Scan form with CMS type selection
+- Real-time results display with severity breakdown
+- Rules version card with check/update buttons
+- REST API endpoints for rule status and updates
 
 ## Data Flow
 
 ```
-┌─────────────┐     ┌──────────────────┐     ┌───────────────┐
-│  CLI Input  │────▶│  Scanner         │────▶│  File Walker  │
-└─────────────┘     │  (Orchestrator)  │     └───────┬───────┘
-                    └────────┬─────────┘             │
-                             │                       │
-              ┌──────────────┼───────────────────────┘
-              │              │
-              ▼              ▼
-     ┌────────────┐  ┌──────────────┐
-     │ CMS        │  │ Detectors    │
-     │ Scanner    │  │ & Analyzers  │
-     └────────────┘  └──────┬───────┘
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │ Report        │
-                    │ Generator     │
-                    └───────┬───────┘
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │ Formatter     │
-                    │ (Console/     │
-                    │  JSON/HTML)   │
-                    └───────────────┘
+┌──────────────────────┐     ┌──────────────────┐     ┌───────────────┐
+│ External Sources     │     │  Scanner         │────▶│  File Walker  │
+│ (YARA, community,   │────▶│  (Orchestrator)  │     └───────┬───────┘
+│  commercial feeds)  │     └────────┬─────────┘             │
+└──────────┬───────────┘              │                       │
+           │                          │                       │
+           ▼                          │                       │
+┌────────────────────┐                │                       │
+│ tools/update-      │                │                       │
+│ rules.sh + yara-   │                │                       │
+│ converter.php      │                │                       │
+│                    │                │                       │
+│ (cron: 0 3 * * *)  │                │                       │
+└──────────┬─────────┘                │                       │
+           │                          │                       │
+           ▼                          │                       │
+┌────────────────────┐  ┌──────────────┼───────────────────────┘
+│ rules/external/    │  │              │
+│ (.json files)      │  │              │
+└──────────┬─────────┘  │              │
+           │             ▼              ▼
+           │     ┌────────────┐  ┌──────────────┐
+           └────▶│ CMS        │  │ Detectors    │
+                 │ Scanner    │  │ & Analyzers  │
+                 └────────────┘  └──────┬───────┘
+                                        │
+                                        ▼
+                                ┌───────────────┐
+                                │ Report        │
+                                │ Generator     │
+                                └───────┬───────┘
+                                        │
+                                        ▼
+                                ┌───────────────┐
+                                │ Formatter     │
+                                │ (Console/     │
+                                │  JSON/HTML)   │
+                                └───────────────┘
 ```
 
 ## Class Diagram

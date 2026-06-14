@@ -256,16 +256,90 @@ These are built-in exclusions. To add more, modify the `walkDirectory` method in
 
 ## Web Dashboard
 
-WebGuardian includes a built-in web dashboard for visual scan management.
+WebGuardian includes a built-in web dashboard built with Tailwind CSS for visual scan management.
 
 ### Starting the Dashboard
 
 ```bash
-# Using PHP built-in server
 php -S localhost:8080 -t public/
 ```
 
 Then open `http://localhost:8080` in your browser.
+
+### Dashboard Sections
+
+| Section | Description |
+|---------|-------------|
+| **Scan Form** | Input path, select CMS type (auto/wordpress/laravel/generic), depth, options |
+| **Results Display** | Status banner, statistics grid, findings list with severity badges |
+| **Rules Version Card** | Shows built-in + external rule counts and last update timestamp |
+| **Check Version** | Calls API to fetch current rule status from the detection engine |
+| **Update Now** | Triggers `tools/update-rules.sh`, shows real-time log, auto-refreshes counts |
+
+### API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `?api=rules_status` | GET | Returns JSON with builtin/external rule counts, file list, last update |
+| `?api=update_rules` | GET | Runs external rule updater, returns updated status |
+
+## Automated Rule Updates
+
+WebGuardian automates keeping detection rules current via a cron-ready pipeline.
+
+### Available Tools
+
+```bash
+tools/
+├── update-rules.sh           # Main updater (cron-ready)
+├── yara-converter.php        # YARA → WebGuardian JSON converter
+├── alert-on-critical.sh      # Email/Slack notifier
+└── config/
+    ├── rules-sources.json    # External source registry
+    └── crontab.example       # Cron templates
+```
+
+### Usage
+
+```bash
+# Update all enabled sources
+./tools/update-rules.sh
+
+# Check status
+./tools/update-rules.sh --status
+
+# Preview changes (dry run)
+./tools/update-rules.sh --dry-run
+
+# List available sources
+./tools/update-rules.sh --list
+
+# Update specific source
+./tools/update-rules.sh --source=yara_php_malware
+```
+
+### Cron Setup
+
+```bash
+# Daily update at 3 AM
+0 3 * * * /opt/webguardian/tools/update-rules.sh --quiet >> /var/log/webguardian-update.log 2>&1
+
+# Automatic scan after update
+0 4 * * * /opt/webguardian/bin/webguardian scan /var/www --format=json --output=/var/reports/daily.json
+```
+
+### Alert Configuration
+
+```bash
+# Email alert
+./tools/alert-on-critical.sh /var/reports/scan.json admin@example.com
+
+# Slack webhook
+./tools/alert-on-critical.sh /var/reports/scan.json "" https://hooks.slack.com/services/...
+
+# Both
+./tools/alert-on-critical.sh /var/reports/scan.json admin@example.com https://hooks.slack.com/...
+```
 
 ## Troubleshooting
 

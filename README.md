@@ -35,7 +35,15 @@
 - **Console output** — colorized terminal report with severity breakdown
 - **JSON export** — machine-readable structured data for CI/CD integration
 - **HTML report** — production-grade dashboard with severity badges and statistics
+- **Web Dashboard** — Tailwind CSS UI with scan form, real-time results, and version management
 - **Severity classification** — Critical / High / Medium / Low / Info
+
+### 🔄 Automated Rule Updates
+- **Cron-ready updater** — `tools/update-rules.sh` fetches, converts, and merges rules from external sources
+- **YARA converter** — converts YARA rule files to WebGuardian JSON format
+- **Source registry** — `tools/config/rules-sources.json` manages external feeds
+- **Version checker** — Web UI shows rule count and last update; one-click update button
+- **Alert notifier** — `tools/alert-on-critical.sh` sends email/Slack on critical findings
 
 > The project is currently in active development. The rule engine is **extensible** and allows adding custom detection patterns without modifying the core code.
 
@@ -48,9 +56,10 @@
 - [Usage](#usage)
 - [Platform Detection](#platform-detection)
 - [Output Formats](#output-formats)
+- [Web Dashboard](#web-dashboard)
+- [Automated Rule Updates](#automated-rule-updates)
 - [Extending Rules](#extending-rules)
 - [Architecture](#architecture)
-- [API Reference](#api-reference)
 - [Integration](#integration)
 - [FAQ](#faq)
 - [Contributing](#contributing)
@@ -265,6 +274,135 @@ A production-grade responsive dashboard featuring:
 
 ---
 
+## 🌐 Web Dashboard
+
+WebGuardian includes a production-grade web dashboard built with **Tailwind CSS** for visual scan management.
+
+### Starting the Dashboard
+
+```bash
+php -S localhost:8080 -t public/
+```
+
+Then open `http://localhost:8080` in your browser.
+
+### Dashboard Features
+
+| Feature | Description |
+|---------|-------------|
+| **Scan Form** | Input path, select CMS type, configure depth and options |
+| **Real-time Results** | Severity-colored status banner, stats grid, findings list |
+| **Rules Version Card** | Shows built-in + external rule count, last update timestamp |
+| **Check Version** | Fetches current rule status from the detection engine |
+| **Update Now** | Runs the external rule updater and refreshes display |
+| **Responsive Design** | Works on desktop and mobile devices |
+| **Keyboard Shortcut** | Ctrl+Enter to submit scan form |
+
+### API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `?api=rules_status` | GET | Returns rule counts, last update, and file list |
+| `?api=update_rules` | GET | Triggers `tools/update-rules.sh` and returns updated status |
+
+---
+
+## 🔄 Automated Rule Updates
+
+WebGuardian includes a complete automation pipeline for keeping detection rules current.
+
+### Architecture
+
+```
+External Sources (YARA repos, community feeds)
+        │
+        ▼
+tools/update-rules.sh    ← Cron: 0 3 * * *
+        │
+        ├──► Download raw rule files
+        ├──► Convert YARA → JSON (yara-converter.php)
+        └──► Merge into rules/external/
+                │
+                ▼
+        Scanners load external rules automatically
+                │
+                ▼
+        Web UI shows version + Update Now button
+```
+
+### One-Command Update
+
+```bash
+# Update all enabled sources
+./tools/update-rules.sh
+
+# Check current status
+./tools/update-rules.sh --status
+
+# Dry run (preview only)
+./tools/update-rules.sh --dry-run
+
+# List available sources
+./tools/update-rules.sh --list
+```
+
+### Source Registry
+
+Edit `tools/config/rules-sources.json` to add or remove external sources:
+
+```json
+{
+  "sources": [
+    {
+      "id": "yara_php_malware",
+      "name": "YARA PHP Malware Rules",
+      "type": "yara",
+      "url": "https://raw.githubusercontent.com/.../php_malware.yar",
+      "enabled": true,
+      "severity_map": {
+        "MALWARE": "critical",
+        "WEBSHELL": "critical"
+      }
+    }
+  ]
+}
+```
+
+### Cron Setup
+
+```bash
+# Edit crontab
+crontab -e
+
+# Update rules daily at 3:00 AM
+0 3 * * * /opt/webguardian/tools/update-rules.sh --quiet >> /var/log/webguardian-update.log 2>&1
+
+# Run scan daily at 4:00 AM after update
+0 4 * * * /opt/webguardian/bin/webguardian scan /var/www/html --format=json --output=/var/reports/daily-scan.json
+```
+
+### Alert on Critical Findings
+
+```bash
+# Send email when critical issues are found
+./tools/alert-on-critical.sh /var/reports/scan.json admin@example.com
+
+# Send to Slack webhook
+./tools/alert-on-critical.sh /var/reports/scan.json "" https://hooks.slack.com/...
+```
+
+### Tools Reference
+
+| Tool | Purpose |
+|------|---------|
+| `tools/update-rules.sh` | Main updater: fetches, converts, merges external rules |
+| `tools/yara-converter.php` | Converts YARA `.yar` files to WebGuardian JSON format |
+| `tools/alert-on-critical.sh` | Sends email/Slack alerts on critical/high findings |
+| `tools/config/rules-sources.json` | Registry of external rule source URLs |
+| `tools/config/crontab.example` | Ready-to-use cron job templates |
+
+---
+
 ## 🔌 Extending Rules
 
 ### JSON Rule Files
@@ -316,16 +454,16 @@ $results = $scanner->run();
 ```
 webguardian/
 ├── bin/
-│   └── webguardian          # CLI entry point
+│   └── webguardian            # CLI entry point
 ├── src/
-│   ├── Scanner.php           # Main scanner orchestrator
+│   ├── Scanner.php            # Main scanner orchestrator
 │   ├── Scanner/
 │   │   ├── WordPressScanner.php
 │   │   ├── LaravelScanner.php
 │   │   └── GenericScanner.php
 │   ├── Detector/
-│   │   ├── MalwareDetector.php
-│   │   ├── BackdoorDetector.php
+│   │   ├── MalwareDetector.php   # Signature + external rules
+│   │   ├── BackdoorDetector.php  # Heuristic scoring
 │   │   └── VulnerabilityDetector.php
 │   ├── Analyzer/
 │   │   ├── FileAnalyzer.php
@@ -337,12 +475,21 @@ webguardian/
 │           ├── JsonFormatter.php
 │           └── HtmlFormatter.php
 ├── rules/
-│   ├── malware-patterns.json
+│   ├── malware-patterns.json    # Built-in signatures
 │   ├── wordpress-suspicious.json
 │   ├── laravel-backdoors.json
-│   └── generic-threats.json
+│   ├── generic-threats.json
+│   └── external/                # Auto-updated external rules
+│       └── .gitkeep
+├── tools/
+│   ├── update-rules.sh          # Cron-ready external updater
+│   ├── yara-converter.php       # YARA → JSON converter
+│   ├── alert-on-critical.sh     # Email/Slack notifier
+│   └── config/
+│       ├── rules-sources.json   # External source registry
+│       └── crontab.example      # Cron job templates
 ├── public/
-│   └── index.php             # Web dashboard (Tailwind CSS)
+│   └── index.php                # Web dashboard (Tailwind CSS)
 ├── tests/
 ├── docs/
 │   ├── ARCHITECTURE.md

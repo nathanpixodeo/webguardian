@@ -206,6 +206,16 @@ php vendor/bin/phpunit tests/Detector/
 - [ ] CHANGELOG.md updated (if applicable)
 - [ ] Commits are signed
 
+## Adding External Rule Sources
+
+To add a new external source to the auto-update pipeline:
+
+1. **Edit** `tools/config/rules-sources.json`
+2. **Add** a new entry with `id`, `type` (`yara` or `webguardian_json`), `url`, and `severity_map`
+3. **Test** with `./tools/update-rules.sh --source=<id>`
+4. **Verify** the converted JSON in `rules/external/`
+5. **Submit PR** with the updated config
+
 ## Adding Detection Rules
 
 1. **Research the threat**: Understand the pattern you're detecting
