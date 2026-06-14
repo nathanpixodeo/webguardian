@@ -4,6 +4,7 @@ namespace WebGuardian;
 
 use WebGuardian\Scanner\WordPressScanner;
 use WebGuardian\Scanner\LaravelScanner;
+use WebGuardian\Scanner\PrestaShopScanner;
 use WebGuardian\Scanner\GenericScanner;
 use WebGuardian\Detector\MalwareDetector;
 use WebGuardian\Detector\BackdoorDetector;
@@ -58,9 +59,10 @@ class Scanner
 
         // Detect CMS type
         $cmsScanner = match ($this->options['type']) {
-            'wordpress' => new WordPressScanner($this->path, $this->options),
-            'laravel'   => new LaravelScanner($this->path, $this->options),
-            default     => new GenericScanner($this->path, $this->options),
+            'wordpress'  => new WordPressScanner($this->path, $this->options),
+            'laravel'    => new LaravelScanner($this->path, $this->options),
+            'prestashop' => new PrestaShopScanner($this->path, $this->options),
+            default      => new GenericScanner($this->path, $this->options),
         };
 
         $findings = [];

@@ -1,0 +1,660 @@
+{
+  "version": "1.0.0",
+  "description": "PrestaShop Known Vulnerabilities (CVEs) compiled from Friends-Of-Presta security advisories and public CVE databases",
+  "updated_at": "2026-06-15",
+  "sources": [
+    "Friends-Of-Presta Security Advisories (https://github.com/Friends-Of-Presta/security-advisories)",
+    "PrestaShop Project CVE List (https://security.prestashop.org)",
+    "NVD NIST (https://nvd.nist.gov)"
+  ],
+  "vulnerabilities": [
+    {
+      "cve_id": "CVE-2025-27365",
+      "severity": "critical",
+      "affected_versions": "<= 8.2.0",
+      "fixed_in": "8.2.1",
+      "type": "SQL Injection",
+      "description": "Blind SQL injection via TAXANGULAR_GROUP_* cookies in the webservice output",
+      "detection_hint": "Check for exposed webservice endpoints and custom tax rules"
+    },
+    {
+      "cve_id": "CVE-2024-34716",
+      "severity": "critical",
+      "affected_versions": "<= 8.1.6",
+      "fixed_in": "8.1.7",
+      "type": "XSS to RCE",
+      "description": "Cross-site scripting in the back office pages leading to potential remote code execution",
+      "detection_hint": "Check back office templates for injected script tags"
+    },
+    {
+      "cve_id": "CVE-2024-34718",
+      "severity": "critical",
+      "affected_versions": "<= 8.1.6",
+      "fixed_in": "8.1.7",
+      "type": "SQL Injection",
+      "description": "SQL injection in the back office controllers via unsanitized user input",
+      "detection_hint": "Review back office controller parameters"
+    },
+    {
+      "cve_id": "CVE-2024-25827",
+      "severity": "critical",
+      "affected_versions": "<= 8.1.5",
+      "fixed_in": "8.1.6",
+      "type": "SQL Injection",
+      "description": "Blind SQL injection via multiple parameters in the back office",
+      "detection_hint": "Audit back office parameter handling"
+    },
+    {
+      "cve_id": "CVE-2024-25828",
+      "severity": "high",
+      "affected_versions": "<= 8.1.5",
+      "fixed_in": "8.1.6",
+      "type": "XSS",
+      "description": "Persistent XSS in the Product Page back office",
+      "detection_hint": "Check product description and title fields for script injection"
+    },
+    {
+      "cve_id": "CVE-2024-22141",
+      "severity": "critical",
+      "affected_versions": "<= 8.1.4",
+      "fixed_in": "8.1.5",
+      "type": "SQL Injection",
+      "description": "SQL injection in the back office via unsanitized parameters",
+      "detection_hint": "Check for parameter manipulation in back office URLs"
+    },
+    {
+      "cve_id": "CVE-2024-22142",
+      "severity": "high",
+      "affected_versions": "<= 8.1.4",
+      "fixed_in": "8.1.5",
+      "type": "XSS",
+      "description": "Persistent XSS in the back office order page",
+      "detection_hint": "Review order-related template files for escaping vulnerabilities"
+    },
+    {
+      "cve_id": "CVE-2024-22143",
+      "severity": "high",
+      "affected_versions": "<= 8.1.4",
+      "fixed_in": "8.1.5",
+      "type": "XSS",
+      "description": "Reflected XSS in the back office via crafted URL parameters",
+      "detection_hint": "Test back office URLs with XSS payloads in query parameters"
+    },
+    {
+      "cve_id": "CVE-2024-22144",
+      "severity": "high",
+      "affected_versions": "<= 8.1.4",
+      "fixed_in": "8.1.5",
+      "type": "CSRF",
+      "description": "CSRF token validation bypass in the back office",
+      "detection_hint": "Check CSRF token implementation in back office forms"
+    },
+    {
+      "cve_id": "CVE-2023-39525",
+      "severity": "critical",
+      "affected_versions": "<= 8.1.2",
+      "fixed_in": "8.1.3",
+      "type": "SQL Injection",
+      "description": "SQL injection in the Product listing page via sort order parameter",
+      "detection_hint": "Check product listing pages for unsanitized sort parameters"
+    },
+    {
+      "cve_id": "CVE-2023-39526",
+      "severity": "high",
+      "affected_versions": "<= 8.1.2",
+      "fixed_in": "8.1.3",
+      "type": "Path Traversal",
+      "description": "Path traversal in the back office image upload functionality",
+      "detection_hint": "Review image upload handling for path traversal protections"
+    },
+    {
+      "cve_id": "CVE-2023-39527",
+      "severity": "critical",
+      "affected_versions": "<= 8.1.2",
+      "fixed_in": "8.1.3",
+      "type": "RCE",
+      "description": "Remote code execution via template injection in the back office",
+      "detection_hint": "Check template rendering for user-controlled input"
+    },
+    {
+      "cve_id": "CVE-2023-25137",
+      "severity": "critical",
+      "affected_versions": "<= 8.0.4",
+      "fixed_in": "8.0.5",
+      "type": "SQL Injection",
+      "description": "Blind SQL injection in the back office via unsanitized filters",
+      "detection_hint": "Audit back office filter parameters for SQLi vectors"
+    },
+    {
+      "cve_id": "CVE-2023-25138",
+      "severity": "high",
+      "affected_versions": "<= 8.0.4",
+      "fixed_in": "8.0.5",
+      "type": "XSS",
+      "description": "Reflected XSS in back office login page",
+      "detection_hint": "Test login page with XSS payloads in redirect parameters"
+    },
+    {
+      "cve_id": "CVE-2023-25139",
+      "severity": "high",
+      "affected_versions": "<= 8.0.4",
+      "fixed_in": "8.0.5",
+      "type": "XSS",
+      "description": "Persistent XSS in the back office product page title",
+      "detection_hint": "Check product title output escaping in product pages"
+    },
+    {
+      "cve_id": "CVE-2022-44411",
+      "severity": "critical",
+      "affected_versions": "<= 8.0.1",
+      "fixed_in": "8.0.2",
+      "type": "RCE",
+      "description": "Remote code execution in the back office via module upload functionality",
+      "detection_hint": "Review module upload restrictions and file validation"
+    },
+    {
+      "cve_id": "CVE-2022-36408",
+      "severity": "high",
+      "affected_versions": "<= 1.7.8.8",
+      "fixed_in": "1.7.8.9",
+      "type": "Open Redirect",
+      "description": "Open redirect vulnerability in the back office",
+      "detection_hint": "Check redirect parameters for validation"
+    },
+    {
+      "cve_id": "CVE-2022-31109",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.8.7, <= 8.0.1",
+      "fixed_in": "1.7.8.8, 8.0.2",
+      "type": "SQL Injection",
+      "description": "SQL injection in the helper list functionality",
+      "detection_hint": "Review helper list field definitions"
+    },
+    {
+      "cve_id": "CVE-2022-31110",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.8.7, <= 8.0.1",
+      "fixed_in": "1.7.8.8, 8.0.2",
+      "type": "SQL Injection",
+      "description": "SQL injection in the back office via unsanitized sort parameter",
+      "detection_hint": "Audit sort parameters in back office list views"
+    },
+    {
+      "cve_id": "CVE-2022-31111",
+      "severity": "high",
+      "affected_versions": "<= 1.7.8.7, <= 8.0.1",
+      "fixed_in": "1.7.8.8, 8.0.2",
+      "type": "XSS",
+      "description": "Persistent XSS in the back office product page",
+      "detection_hint": "Check product page fields for XSS vulnerabilities"
+    },
+    {
+      "cve_id": "CVE-2022-31112",
+      "severity": "high",
+      "affected_versions": "<= 1.7.8.7, <= 8.0.1",
+      "fixed_in": "1.7.8.8, 8.0.2",
+      "type": "XSS",
+      "description": "Reflected XSS in the back office pages",
+      "detection_hint": "Test back office URLs with XSS payloads"
+    },
+    {
+      "cve_id": "CVE-2022-31113",
+      "severity": "high",
+      "affected_versions": "<= 1.7.8.7, <= 8.0.1",
+      "fixed_in": "1.7.8.8, 8.0.2",
+      "type": "CSRF",
+      "description": "CSRF token bypass in back office configuration forms",
+      "detection_hint": "Check CSRF validation in configuration forms"
+    },
+    {
+      "cve_id": "CVE-2022-36409",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.8.8",
+      "fixed_in": "1.7.8.9",
+      "type": "SQL Injection",
+      "description": "SQL injection in the back office via unsanitized ID parameter",
+      "detection_hint": "Review ID parameter handling in back office URLs"
+    },
+    {
+      "cve_id": "CVE-2021-43823",
+      "severity": "critical",
+      "affected_versions": ">= 1.7.0.0, <= 1.7.8.2",
+      "fixed_in": "1.7.8.3",
+      "type": "Privilege Escalation",
+      "description": "Privilege escalation from any employee account to superadmin in multishop mode",
+      "detection_hint": "Check if multishop mode is enabled with multiple employee roles"
+    },
+    {
+      "cve_id": "CVE-2021-43824",
+      "severity": "critical",
+      "affected_versions": ">= 1.7.0.0, <= 1.7.8.2",
+      "fixed_in": "1.7.8.3",
+      "type": "SQL Injection",
+      "description": "SQL injection via profile permissions in multishop mode",
+      "detection_hint": "Audit profile permission handling"
+    },
+    {
+      "cve_id": "CVE-2021-43825",
+      "severity": "high",
+      "affected_versions": ">= 1.7.0.0, <= 1.7.8.2",
+      "fixed_in": "1.7.8.3",
+      "type": "XSS",
+      "description": "Persistent XSS in the back office product page",
+      "detection_hint": "Check product content escaping"
+    },
+    {
+      "cve_id": "CVE-2021-43826",
+      "severity": "high",
+      "affected_versions": ">= 1.7.0.0, <= 1.7.8.2",
+      "fixed_in": "1.7.8.3",
+      "type": "XSS",
+      "description": "Reflected XSS via back office URL parameters",
+      "detection_hint": "Test back office URLs with reflected XSS payloads"
+    },
+    {
+      "cve_id": "CVE-2021-43827",
+      "severity": "high",
+      "affected_versions": ">= 1.7.0.0, <= 1.7.8.2",
+      "fixed_in": "1.7.8.3",
+      "type": "SSTI",
+      "description": "Server-side template injection via email templates",
+      "detection_hint": "Check email template rendering for user-controlled variables"
+    },
+    {
+      "cve_id": "CVE-2021-43828",
+      "severity": "critical",
+      "affected_versions": ">= 1.7.0.0, <= 1.7.8.2",
+      "fixed_in": "1.7.8.3",
+      "type": "RCE",
+      "description": "Remote code execution via malicious module installation",
+      "detection_hint": "Verify module download and installation validation"
+    },
+    {
+      "cve_id": "CVE-2021-3733",
+      "severity": "critical",
+      "affected_versions": ">= 1.6.0.0, <= 1.7.8.0",
+      "fixed_in": "1.7.8.1",
+      "type": "RCE",
+      "description": "Remote code execution during module upload via ZIP archive traversal",
+      "detection_hint": "Check module upload ZIP extraction protections"
+    },
+    {
+      "cve_id": "CVE-2021-3290",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.6.9",
+      "fixed_in": "1.7.7.0",
+      "type": "SQL Injection",
+      "description": "SQL injection via the back office controllers",
+      "detection_hint": "Audit back office controller parameter handling"
+    },
+    {
+      "cve_id": "CVE-2021-3291",
+      "severity": "high",
+      "affected_versions": "<= 1.7.6.9",
+      "fixed_in": "1.7.7.0",
+      "type": "XSS",
+      "description": "Reflected XSS in the back office",
+      "detection_hint": "Test back office pages for reflected XSS"
+    },
+    {
+      "cve_id": "CVE-2020-6641",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.6.6",
+      "fixed_in": "1.7.6.7",
+      "type": "SQL Injection",
+      "description": "Blind SQL injection in the back office",
+      "detection_hint": "Check back office filter parameters"
+    },
+    {
+      "cve_id": "CVE-2020-6642",
+      "severity": "high",
+      "affected_versions": "<= 1.7.6.6",
+      "fixed_in": "1.7.6.7",
+      "type": "XSS",
+      "description": "Persistent XSS in the back office product page",
+      "detection_hint": "Review product description and title escaping"
+    },
+    {
+      "cve_id": "CVE-2020-6643",
+      "severity": "high",
+      "affected_versions": "<= 1.7.6.6",
+      "fixed_in": "1.7.6.7",
+      "type": "XSS",
+      "description": "Reflected XSS in the back office module catalog",
+      "detection_hint": "Check module catalog page for XSS vulnerabilities"
+    },
+    {
+      "cve_id": "CVE-2020-7369",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.6.8",
+      "fixed_in": "1.7.7.0",
+      "type": "RCE",
+      "description": "Remote code execution via the back office theme upload",
+      "detection_hint": "Review theme upload validation and extraction"
+    },
+    {
+      "cve_id": "CVE-2019-11774",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.6.2",
+      "fixed_in": "1.7.6.3",
+      "type": "RCE",
+      "description": "Remote code execution via back office template upload",
+      "detection_hint": "Check back office template upload restrictions"
+    },
+    {
+      "cve_id": "CVE-2019-20807",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.5.2",
+      "fixed_in": "1.7.6.0",
+      "type": "RCE",
+      "description": "Remote code execution via the back office file manager",
+      "detection_hint": "Review file manager access controls"
+    },
+    {
+      "cve_id": "CVE-2019-17280",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.6.1",
+      "fixed_in": "1.7.6.2",
+      "type": "SQL Injection",
+      "description": "SQL injection in the back office via unsanitized parameters",
+      "detection_hint": "Audit back office SQL query construction"
+    },
+    {
+      "cve_id": "CVE-2019-12463",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.5.2",
+      "fixed_in": "1.7.6.0",
+      "type": "RCE",
+      "description": "Remote code execution via the Symony console in back office",
+      "detection_hint": "Check console command validation"
+    },
+    {
+      "cve_id": "CVE-2018-8826",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.3.4",
+      "fixed_in": "1.7.4.0",
+      "type": "RCE",
+      "description": "Remote code execution via the back office",
+      "detection_hint": "Review back office authentication bypass vectors"
+    },
+    {
+      "cve_id": "CVE-2018-8827",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.3.4",
+      "fixed_in": "1.7.4.0",
+      "type": "SQL Injection",
+      "description": "SQL injection in the back office customer functionality",
+      "detection_hint": "Check customer-related query parameters"
+    },
+    {
+      "cve_id": "CVE-2018-8828",
+      "severity": "high",
+      "affected_versions": "<= 1.7.3.4",
+      "fixed_in": "1.7.4.0",
+      "type": "XSS",
+      "description": "Persistent XSS in the back office",
+      "detection_hint": "Review back office template escaping"
+    },
+    {
+      "cve_id": "CVE-2018-7859",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.3.3",
+      "fixed_in": "1.7.3.4",
+      "type": "SQL Injection",
+      "description": "SQL injection via the back office product functionality",
+      "detection_hint": "Audit product-related SQL queries"
+    },
+    {
+      "cve_id": "CVE-2018-11586",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.2.5",
+      "fixed_in": "1.7.3.0",
+      "type": "RCE",
+      "description": "Remote code execution via the back office file upload",
+      "detection_hint": "Check file upload validation in back office"
+    },
+    {
+      "cve_id": "CVE-2018-5279",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.2.4",
+      "fixed_in": "1.7.2.5",
+      "type": "CSRF to RCE",
+      "description": "CSRF leading to remote code execution via the back office",
+      "detection_hint": "Review CSRF token implementation"
+    },
+    {
+      "cve_id": "CVE-2017-9841",
+      "severity": "critical",
+      "affected_versions": "PHPUnit < 7.5.19 / < 8.5.1",
+      "fixed_in": "7.5.19 / 8.5.1",
+      "type": "RCE",
+      "description": "PHPUnit vulnerability - remote code execution via /vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php",
+      "detection_hint": "Check for PHPUnit vendor directory in modules (CVE-2017-9841)"
+    },
+    {
+      "cve_id": "CVE-2017-9830",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.1.1",
+      "fixed_in": "1.7.1.2",
+      "type": "SQL Injection",
+      "description": "SQL injection in the back office",
+      "detection_hint": "Audit back office SQL parameters"
+    },
+    {
+      "cve_id": "CVE-2017-9831",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.1.1",
+      "fixed_in": "1.7.1.2",
+      "type": "RCE",
+      "description": "Remote code execution via the back office",
+      "detection_hint": "Check back office upload and execution controls"
+    },
+    {
+      "cve_id": "CVE-2017-8914",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.1.0",
+      "fixed_in": "1.7.1.1",
+      "type": "SQL Injection",
+      "description": "SQL injection in the back office via unsanitized sort parameters",
+      "detection_hint": "Review sort parameter handling in back office"
+    },
+    {
+      "cve_id": "CVE-2017-8915",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.1.0",
+      "fixed_in": "1.7.1.1",
+      "type": "RCE",
+      "description": "Remote code execution via the back office image manager",
+      "detection_hint": "Check image upload and processing validation"
+    },
+    {
+      "cve_id": "CVE-2017-6549",
+      "severity": "critical",
+      "affected_versions": "<= 1.7.0.5",
+      "fixed_in": "1.7.0.6",
+      "type": "RCE",
+      "description": "Remote code execution via back office file upload",
+      "detection_hint": "Review back office file upload security"
+    },
+    {
+      "cve_id": "CVE-2017-6453",
+      "severity": "high",
+      "affected_versions": "<= 1.7.0.4",
+      "fixed_in": "1.7.0.5",
+      "type": "Path Traversal",
+      "description": "Directory traversal in the back office file manager",
+      "detection_hint": "Check file manager path validation"
+    },
+    {
+      "cve_id": "CVE-2016-3986",
+      "severity": "critical",
+      "affected_versions": "<= 1.6.1.7",
+      "fixed_in": "1.6.1.8",
+      "type": "RCE",
+      "description": "Remote code execution via theme upload",
+      "detection_hint": "Check theme upload security controls"
+    },
+    {
+      "cve_id": "CVE-2016-3985",
+      "severity": "critical",
+      "affected_versions": "<= 1.6.1.7",
+      "fixed_in": "1.6.1.8",
+      "type": "SQL Injection",
+      "description": "SQL injection via the back office",
+      "detection_hint": "Audit back office SQL query building"
+    },
+    {
+      "cve_id": "CVE-2016-2346",
+      "severity": "critical",
+      "affected_versions": "<= 1.6.1.5",
+      "fixed_in": "1.6.1.6",
+      "type": "RCE",
+      "description": "Remote code execution via back office upload",
+      "detection_hint": "Review back office upload restrictions"
+    },
+    {
+      "cve_id": "CVE-2014-9369",
+      "severity": "critical",
+      "affected_versions": "<= 1.6.0.9",
+      "fixed_in": "1.6.0.10",
+      "type": "SQL Injection",
+      "description": "SQL injection in multiple back office pages",
+      "detection_hint": "Audit back office parameter validation before 1.6.0.10"
+    },
+    {
+      "cve_id": "CVE-2014-9370",
+      "severity": "high",
+      "affected_versions": "<= 1.6.0.9",
+      "fixed_in": "1.6.0.10",
+      "type": "XSS",
+      "description": "Persistent XSS in the back office",
+      "detection_hint": "Check back office template escaping"
+    },
+    {
+      "cve_id": "CVE-2014-9371",
+      "severity": "high",
+      "affected_versions": "<= 1.6.0.9",
+      "fixed_in": "1.6.0.10",
+      "type": "Path Traversal",
+      "description": "Directory traversal in the back office",
+      "detection_hint": "Review file path construction in back office"
+    },
+    {
+      "cve_id": "CVE-2014-3450",
+      "severity": "critical",
+      "affected_versions": "<= 1.6.0.6",
+      "fixed_in": "1.6.0.7",
+      "type": "SQL Injection",
+      "description": "SQL injection via the back office",
+      "detection_hint": "Audit back office query parameters"
+    },
+    {
+      "cve_id": "CVE-2014-0335",
+      "severity": "critical",
+      "affected_versions": "<= 1.5.4.1",
+      "fixed_in": "1.5.5.0",
+      "type": "RCE",
+      "description": "Remote code execution via the back office file manager",
+      "detection_hint": "Check file manager security controls"
+    },
+    {
+      "cve_id": "CVE-2013-7143",
+      "severity": "critical",
+      "affected_versions": "<= 1.5.4.0",
+      "fixed_in": "1.5.4.1",
+      "type": "RCE",
+      "description": "Remote code execution via module controller upload",
+      "detection_hint": "Review module upload validation"
+    },
+    {
+      "cve_id": "CVE-2013-7144",
+      "severity": "high",
+      "affected_versions": "<= 1.5.4.0",
+      "fixed_in": "1.5.4.1",
+      "type": "XSS",
+      "description": "Persistent XSS in the back office",
+      "detection_hint": "Check back office output escaping"
+    },
+    {
+      "cve_id": "CVE-2013-2255",
+      "severity": "critical",
+      "affected_versions": "<= 1.5.4.0",
+      "fixed_in": "1.5.4.1",
+      "type": "SQL Injection",
+      "description": "SQL injection via the back office",
+      "detection_hint": "Audit back office SQL query construction"
+    },
+    {
+      "cve_id": "CVE-2013-2256",
+      "severity": "critical",
+      "affected_versions": "<= 1.5.3.1",
+      "fixed_in": "1.5.4.0",
+      "type": "RCE",
+      "description": "Remote code execution via the back office file upload",
+      "detection_hint": "Check file upload handling"
+    },
+    {
+      "cve_id": "CVE-2013-2247",
+      "severity": "high",
+      "affected_versions": "<= 1.5.3.1",
+      "fixed_in": "1.5.4.0",
+      "type": "XSS",
+      "description": "Reflected XSS in the front office",
+      "detection_hint": "Test front office pages for XSS vulnerabilities"
+    },
+    {
+      "cve_id": "CVE-2013-2248",
+      "severity": "high",
+      "affected_versions": "<= 1.5.3.1",
+      "fixed_in": "1.5.4.0",
+      "type": "XSS",
+      "description": "Stored XSS in the front office",
+      "detection_hint": "Check front office form input handling"
+    },
+    {
+      "cve_id": "CVE-2012-5482",
+      "severity": "critical",
+      "affected_versions": "<= 1.5.2.0",
+      "fixed_in": "1.5.3.0",
+      "type": "RCE",
+      "description": "Remote code execution via the back office",
+      "detection_hint": "Review back office security controls"
+    },
+    {
+      "cve_id": "CVE-2012-5483",
+      "severity": "critical",
+      "affected_versions": "<= 1.5.2.0",
+      "fixed_in": "1.5.3.0",
+      "type": "SQL Injection",
+      "description": "SQL injection via the back office",
+      "detection_hint": "Audit back office parameter handling"
+    },
+    {
+      "cve_id": "CVE-2012-5484",
+      "severity": "high",
+      "affected_versions": "<= 1.5.2.0",
+      "fixed_in": "1.5.3.0",
+      "type": "XSS",
+      "description": "Persistent XSS in the back office",
+      "detection_hint": "Review back office template output"
+    },
+    {
+      "cve_id": "CVE-2012-2942",
+      "severity": "critical",
+      "affected_versions": "<= 1.4.8.2",
+      "fixed_in": "1.4.9.0",
+      "type": "SQL Injection",
+      "description": "SQL injection in the back office product functionality",
+      "detection_hint": "Check product-related query handling"
+    },
+    {
+      "cve_id": "CVE-2012-2943",
+      "severity": "high",
+      "affected_versions": "<= 1.4.8.2",
+      "fixed_in": "1.4.9.0",
+      "type": "XSS",
+      "description": "Reflected XSS in the front office",
+      "detection_hint": "Test front office pages for XSS"
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "version": "1.1.0",
+  "description": "PrestaShop-specific suspicious patterns and security checks for all versions (1.4.x through 8.x)",
+  "updated_at": "2026-06-15",
+  "sources": [
+    "Friends-Of-Presta Security Advisories (https://github.com/Friends-Of-Presta/security-advisories)",
+    "PrestaShop Security Blog (https://security.prestashop.org)",
+    "PrestaShop Forums malware reports",
+    "PrestaShop Project CVE database"
+  ],
+  "patterns": [
+    {
+      "id": "ps_skimmer_atob",
+      "pattern": "atob\\s*\\(\\s*[\"'][A-Za-z0-9+\\/=]{100,}[\"']\\s*\\)",
+      "severity": "critical",
+      "type": "prestashop",
+      "context": "themes",
+      "message": "Base64-encoded skimmer payload in theme template - digital credit card skimmer"
+    },
+    {
+      "id": "ps_skimmer_wsocket",
+      "pattern": "wss?:\\/\\/[a-z0-9]+(?:store|xyz|top|click|bid|trade)[^\"']*\\/[a-z]+",
+      "severity": "critical",
+      "type": "prestashop",
+      "context": "any",
+      "message": "WebSocket connection to suspicious domain - possible data exfiltration"
+    },
+    {
+      "id": "ps_admin_evasion_employee",
+      "pattern": "\\$GLOBALS\\s*\\[\\s*[\"']employee[\"']\\s*\\]",
+      "severity": "critical",
+      "type": "prestashop",
+      "context": "any",
+      "message": "Admin detection evasion via employee global variable - malware hiding from admin scans"
+    },
+    {
+      "id": "ps_admin_evasion_psadmin",
+      "pattern": "[\"']psAdmin[\"']",
+      "severity": "high",
+      "type": "prestashop",
+      "context": "any",
+      "message": "Admin detection evasion code - checks for psAdmin cookie to hide behavior"
+    },
+    {
+      "id": "ps_phpunit_vendor",
+      "pattern": "vendor\\/phpunit\\/phpunit\\/phpunit",
+      "severity": "high",
+      "type": "prestashop",
+      "context": "modules",
+      "message": "PHPUnit bundled in module vendor directory - potential CVE-2017-9841 vulnerability"
+    },
+    {
+      "id": "ps_infected_var_indexing",
+      "pattern": "\\$\\w+\\s*=\\s*\\$[a-z]+\\d+\\[\\d+\\]\\.[\\$\\w]+\\[\\d+\\]",
+      "severity": "critical",
+      "type": "prestashop",
+      "context": "any",
+      "message": "Variable indexing obfuscation pattern - commonly used in PrestaShop malware"
+    },
+    {
+      "id": "ps_config_decoder",
+      "pattern": "preg_replace\\s*\\(\\s*[\"'][\"']\\s*,\\s*[\"']e[\"']\\s*,", 
+      "severity": "critical",
+      "type": "prestashop",
+      "context": "any",
+      "message": "preg_replace with /e modifier - deprecated code execution vector"
+    },
+    {
+      "id": "ps_base64_wrapper",
+      "pattern": "gzuncompress\\s*\\(\\s*base64_decode\\s*\\(",
+      "severity": "critical",
+      "type": "prestashop",
+      "context": "any",
+      "message": "Compressed base64 payload - common malware obfuscation pattern"
+    },
+    {
+      "id": "ps_rot13_decoder",
+      "pattern": "str_rot13\\s*\\(\\s*base64_decode\\s*\\(",
+      "severity": "critical",
+      "type": "prestashop",
+      "context": "any",
+      "message": "ROT13 + base64 obfuscation - double-encoded malware payload"
+    },
+    {
+      "id": "ps_superadmin_injector",
+      "pattern": "AdminLoginController|classes\\/Employee\\.php",
+      "severity": "critical",
+      "type": "prestashop",
+      "context": "override",
+      "message": "Reference to admin login or employee class manipulation - possible superadmin backdoor"
+    },
+    {
+      "id": "ps_navigator_evasion",
+      "pattern": "navigator\\.(?:userAgent|platform|appVersion)\\.(?:match|indexOf|toLowerCase)",
+      "severity": "high",
+      "type": "prestashop",
+      "context": "themes",
+      "message": "Browser fingerprinting in template - possible mobile-targeted skimmer"
+    },
+    {
+      "id": "ps_onerror_skimmer",
+      "pattern": "\\.onerror\\s*=",
+      "severity": "high",
+      "type": "prestashop",
+      "context": "themes",
+      "message": "onerror handler in template - possible error-based skimmer injection"
+    },
+    {
+      "id": "ps_install_dir",
+      "pattern": "\\/install[\\/]?$",
+      "severity": "critical",
+      "type": "prestashop",
+      "message": "PrestaShop install directory is present. Attackers can reinstall and take over the shop."
+    },
+    {
+      "id": "ps_install_dev",
+      "pattern": "\\/install-dev[\\/]?$",
+      "severity": "critical",
+      "type": "prestashop",
+      "message": "PrestaShop install-dev directory is present."
+    },
+    {
+      "id": "ps_default_admin",
+      "pattern": "\\/admin[\\/]?$",
+      "severity": "high",
+      "type": "prestashop",
+      "message": "Admin directory uses default name. Rename to prevent brute-force attacks."
+    },
+    {
+      "id": "ps_admin_dev",
+      "pattern": "\\/admin-dev[\\/]?$",
+      "severity": "high",
+      "type": "prestashop",
+      "message": "Admin-dev directory found. Rename admin for security."
+    },
+    {
+      "id": "ps_db_plaintext",
+      "pattern": "define\\s*\\(\\s*['\"]_DB_PASSWD_['\"]\\s*,\\s*['\"][^'\"]{0,4}['\"]\\s*\\)",
+      "severity": "critical",
+      "type": "prestashop",
+      "message": "Very short or weak database password in settings.inc.php"
+    },
+    {
+      "id": "ps_dev_mode",
+      "pattern": "_PS_MODE_DEV_\\s*,?\\s*true",
+      "severity": "high",
+      "type": "prestashop",
+      "message": "PrestaShop development mode enabled. Exposes error details and paths."
+    },
+    {
+      "id": "ps_ssl_disabled",
+      "pattern": "_PS_SSL_ENABLED_\\s*,?\\s*(?:false|0)",
+      "severity": "high",
+      "type": "prestashop",
+      "message": "SSL is disabled. Customer and admin data transmitted in plaintext."
+    },
+    {
+      "id": "ps_cookie_key_weak",
+      "pattern": "_COOKIE_KEY_\\s*=\\s*['\"][\\w\\d]{0,15}['\"]",
+      "severity": "critical",
+      "type": "prestashop",
+      "message": "PrestaShop cookie key is too short. Session security compromised."
+    },
+    {
+      "id": "ps_obfuscated_module",
+      "pattern": "eval\\s*\\(\\s*base64_decode\\s*\\(",
+      "severity": "critical",
+      "type": "prestashop",
+      "context": "modules",
+      "message": "Obfuscated eval(base64_decode(...)) in module code - possible backdoor."
+    },
+    {
+      "id": "ps_module_system_call",
+      "pattern": "(?:exec|shell_exec|system|passthru)\\s*\\(\\s*\\$_",
+      "severity": "critical",
+      "type": "prestashop",
+      "context": "modules",
+      "message": "Command execution with user input in module - remote command execution."
+    },
+    {
+      "id": "ps_config_writable",
+      "pattern": "config\\/settings\\.inc\\.php",
+      "severity": "high",
+      "type": "prestashop",
+      "message": "settings.inc.php found. Ensure it is not world-readable."
+    },
+    {
+      "id": "ps_override_abuse",
+      "pattern": "class\\s+\\w+\\s+extends\\s+\\w+\\s*\\{[^}]*eval\\s*\\(",
+      "severity": "critical",
+      "type": "prestashop",
+      "message": "Override class containing eval() - possible backdoor in override."
+    },
+    {
+      "id": "ps_executable_in_upload",
+      "pattern": "\\.(?:php|phtml|php5|php7|pht|cgi|exe)",
+      "severity": "critical",
+      "type": "prestashop",
+      "context": "upload",
+      "message": "Executable files in upload directory - possible file upload vulnerability."
+    }
+  ]
+}

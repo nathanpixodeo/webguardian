@@ -27,7 +27,7 @@ Usage:
   webguardian --help
 
 Options:
-  --type=<type>        CMS type: auto, wordpress, laravel, generic (default: auto)
+  --type=<type>        CMS type: auto, wordpress, laravel, prestashop, generic (default: auto)
   --format=<format>    Output format: console, json, html (default: console)
   --output=<file>      Write report to file
   --depth=<num>        Max scan depth (default: 10)
@@ -92,6 +92,8 @@ if ($options['type'] === 'auto') {
         $options['type'] = 'wordpress';
     } elseif (file_exists($path . '/artisan') && is_dir($path . '/app')) {
         $options['type'] = 'laravel';
+    } elseif (file_exists($path . '/config/settings.inc.php') || (is_dir($path . '/modules') && is_dir($path . '/themes'))) {
+        $options['type'] = 'prestashop';
     } else {
         $options['type'] = 'generic';
     }

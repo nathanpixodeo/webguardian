@@ -273,6 +273,7 @@ if (file_exists($mergedFile)) {
                                 <option value="auto" <?= ($_POST['scan_type'] ?? 'auto') === 'auto' ? 'selected' : '' ?>>Auto Detect</option>
                                 <option value="wordpress" <?= ($_POST['scan_type'] ?? '') === 'wordpress' ? 'selected' : '' ?>>WordPress</option>
                                 <option value="laravel" <?= ($_POST['scan_type'] ?? '') === 'laravel' ? 'selected' : '' ?>>Laravel</option>
+                                <option value="prestashop" <?= ($_POST['scan_type'] ?? '') === 'prestashop' ? 'selected' : '' ?>>PrestaShop</option>
                                 <option value="generic" <?= ($_POST['scan_type'] ?? '') === 'generic' ? 'selected' : '' ?>>Generic PHP</option>
                             </select>
                         </div>

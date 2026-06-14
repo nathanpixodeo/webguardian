@@ -21,6 +21,7 @@
 |-----|--------|
 | **WordPress** | Core integrity, version vulnerabilities, plugin/theme analysis, upload directory security, wp-config hardening, user enumeration, must-use plugin inspection |
 | **Laravel** | `.env` exposure, APP_KEY strength, debug mode, route exposure, middleware config, composer package audit, service provider analysis |
+| **PrestaShop** | Version detection (1.4–8.x), install dir exposure, admin security, module analysis, override inspection, config hardening, upload security, SSL enforcement |
 | **Generic PHP** | Composer integrity, `.htaccess` security, `.git` exposure, `php.ini` misconfigurations, backup files, information disclosure |
 
 ### 🛡️ Vulnerability Detection
@@ -218,6 +219,7 @@ WebGuardian auto-detects the CMS type:
 |-----------|---------------|
 | `wp-config.php` exists | **WordPress** |
 | `artisan` exists + `app/` directory | **Laravel** |
+| `config/settings.inc.php` exists, or `modules/` + `themes/` dirs present | **PrestaShop** |
 | None of the above | **Generic PHP** |
 
 You can override detection with `--type=<type>`.
@@ -436,6 +438,29 @@ Place custom rules in a directory and reference with `--rules=<path>`:
 | `multiLine` | If true, scans entire file content | ❌ |
 | `negative` | If true, checks for absence of pattern | ❌ |
 
+### Rule Sources
+
+WebGuardian rules come from three tiers:
+
+| Tier | Source | Format | Update Method |
+|------|--------|--------|---------------|
+| **Built-in** | Bundled with WebGuardian (`rules/*.json`) | WebGuardian JSON | Release cycle |
+| **External** | Community feeds, YARA repos, advisory databases | YARA / JSON | `tools/update-rules.sh` (cron) |
+| **Custom** | User-defined rules directory | WebGuardian JSON | `--rules=<path>` |
+
+**Built-in rule files and their origins:**
+
+| File | Sources |
+|------|---------|
+| `rules/malware-patterns.json` | PHP malware signatures, web shell fingerprints, cryptojacking patterns (YARA community, malware analysis) |
+| `rules/wordpress-suspicious.json` | WPScan, WordPress plugin vulnerabilities, core integrity checks |
+| `rules/laravel-backdoors.json` | Laravel security advisories, common misconfigurations, known exploit patterns |
+| `rules/prestashop-suspicious.json` | PrestaShop forums, security blog, Friends-Of-Presta advisories, digital skimmer patterns |
+| `rules/prestashop-vulnerabilities.json` | Friends-Of-Presta CVE database, NVD NIST, PrestaShop security advisories (60+ CVEs from 1.4.x to 8.x) |
+| `rules/generic-threats.json` | Generic PHP threats, `.env` exposure, `.git` exposure, htaccess misconfigurations |
+
+External sources are configured in `tools/config/rules-sources.json` and fetched by `tools/update-rules.sh`.
+
 ### Programmatic Extension
 
 ```php
@@ -460,6 +485,7 @@ webguardian/
 │   ├── Scanner/
 │   │   ├── WordPressScanner.php
 │   │   ├── LaravelScanner.php
+│   │   ├── PrestaShopScanner.php
 │   │   └── GenericScanner.php
 │   ├── Detector/
 │   │   ├── MalwareDetector.php   # Signature + external rules
@@ -478,6 +504,8 @@ webguardian/
 │   ├── malware-patterns.json    # Built-in signatures
 │   ├── wordpress-suspicious.json
 │   ├── laravel-backdoors.json
+│   ├── prestashop-suspicious.json
+│   ├── prestashop-vulnerabilities.json
 │   ├── generic-threats.json
 │   └── external/                # Auto-updated external rules
 │       └── .gitkeep
