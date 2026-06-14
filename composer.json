@@ -1,0 +1,24 @@
+{
+    "name": "webguardian/scanner",
+    "description": "WebGuardian - Malware & Security Scanner for WordPress, Laravel, and PHP applications",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "WebGuardian\\": "src/"
+        }
+    },
+    "bin": ["bin/webguardian"],
+    "require": {
+        "php": ">=8.0",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0"
+    },
+    "scripts": {
+        "test": "phpunit tests/",
+        "scan": "php bin/webguardian"
+    }
+}

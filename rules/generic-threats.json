@@ -1,0 +1,98 @@
+{
+  "version": "1.0.0",
+  "description": "Generic PHP/web application threat patterns",
+  "updated_at": "2026-06-15",
+  "patterns": [
+    {
+      "id": "phpinfo_exposed",
+      "pattern": "phpinfo\\s*\\(\\s*\\)",
+      "severity": "high",
+      "type": "disclosure",
+      "message": "phpinfo() call found - exposes extensive system configuration to potential attackers"
+    },
+    {
+      "id": "git_head_exposed",
+      "pattern": "\\.git\\/HEAD",
+      "severity": "high",
+      "type": "disclosure",
+      "message": ".git directory accessible - entire repository history can be downloaded"
+    },
+    {
+      "id": "env_backup",
+      "pattern": "\\.env\\.(?:bak|old|save|backup|copy|~)",
+      "severity": "critical",
+      "type": "disclosure",
+      "message": "Backup of .env file - credentials exposed in backup file"
+    },
+    {
+      "id": "sql_dump_exposed",
+      "pattern": "\\.sql(?:\\.(?:gz|zip|bak|old))?$",
+      "severity": "critical",
+      "type": "disclosure",
+      "message": "SQL dump file found - entire database including user credentials may be exposed"
+    },
+    {
+      "id": "debug_endpoint",
+      "pattern": "(?:debugbar|telescope|horizon|clockwork)",
+      "severity": "medium",
+      "type": "disclosure",
+      "message": "Debug toolbar/endpoint detected - ensure disabled in production"
+    },
+    {
+      "id": "error_reporting_on",
+      "pattern": "error_reporting\\s*\\(\\s*E_ALL",
+      "severity": "low",
+      "type": "disclosure",
+      "message": "Full error reporting enabled - may display sensitive path information"
+    },
+    {
+      "id": "display_errors_on",
+      "pattern": "ini_set\\s*\\(\\s*['\"]display_errors['\"]\\s*,\\s*['\"]?1['\"]?\\s*\\)",
+      "severity": "high",
+      "type": "disclosure",
+      "message": "display_errors enabled programmatically - errors shown to users"
+    },
+    {
+      "id": "allow_url_include",
+      "pattern": "allow_url_include\\s*=\\s*On",
+      "severity": "critical",
+      "type": "misconfiguration",
+      "message": "allow_url_include enabled - allows remote file inclusion attacks"
+    },
+    {
+      "id": "weak_htaccess",
+      "pattern": "Allow\\s+from\\s+all",
+      "severity": "high",
+      "type": "misconfiguration",
+      "message": ".htaccess allows access from all sources - overly permissive access control"
+    },
+    {
+      "id": "directory_listing",
+      "pattern": "Options\\s+.*\\+Indexes",
+      "severity": "medium",
+      "type": "misconfiguration",
+      "message": "Directory listing enabled - exposes file structure to visitors"
+    },
+    {
+      "id": "add_type_php",
+      "pattern": "AddType\\s+application\\/x-httpd-php",
+      "severity": "high",
+      "type": "misconfiguration",
+      "message": "Custom PHP handler configured - may allow arbitrary PHP execution"
+    },
+    {
+      "id": "composer_dev_deps",
+      "pattern": "composer\\s+install(?!\\s+--no-dev)",
+      "severity": "medium",
+      "type": "misconfiguration",
+      "message": "Dev dependencies detected in production - ensure --no-dev flag is used"
+    },
+    {
+      "id": "backup_in_webroot",
+      "pattern": "\\.(?:bak|old|orig|backup|swp|save)$",
+      "severity": "high",
+      "type": "disclosure",
+      "message": "Backup/temp file in web root - may expose source code or configuration"
+    }
+  ]
+}

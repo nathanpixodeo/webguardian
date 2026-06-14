@@ -1,0 +1,134 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * WebGuardian - Malware & Security Scanner CLI
+ *
+ * Usage: php webguardian scan /path/to/project [options]
+ */
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use WebGuardian\Scanner;
+use WebGuardian\Report\ReportGenerator;
+use WebGuardian\Report\Formatters\ConsoleFormatter;
+use WebGuardian\Report\Formatters\JsonFormatter;
+use WebGuardian\Report\Formatters\HtmlFormatter;
+
+// ----- Parse Arguments -----
+$args = array_slice($argv, 1);
+
+if (empty($args) || in_array($args[0], ['--help', '-h', 'help'])) {
+    echo <<<HELP
+WebGuardian - Malware & Security Scanner
+
+Usage:
+  webguardian scan <path> [options]
+  webguardian --help
+
+Options:
+  --type=<type>        CMS type: auto, wordpress, laravel, generic (default: auto)
+  --format=<format>    Output format: console, json, html (default: console)
+  --output=<file>      Write report to file
+  --depth=<num>        Max scan depth (default: 10)
+  --no-backup          Skip backup file scans
+  --no-perm            Skip permission checks
+  --verbose            Verbose output
+  --rules=<path>       Custom rules directory
+
+Examples:
+  webguardian scan /var/www/html --type=wordpress
+  webguardian scan /var/www/html --format=json --output=report.json
+  webguardian scan . --verbose
+
+HELP;
+    exit(0);
+}
+
+$command = $args[0] ?? 'scan';
+if ($command !== 'scan') {
+    fwrite(STDERR, "Unknown command: $command\n");
+    exit(1);
+}
+
+$path = $args[1] ?? getcwd();
+if (!is_dir($path)) {
+    fwrite(STDERR, "Error: Path is not a valid directory: $path\n");
+    exit(1);
+}
+
+$options = [
+    'type'       => 'auto',
+    'format'     => 'console',
+    'output'     => null,
+    'depth'      => 10,
+    'no-backup'  => false,
+    'no-perm'    => false,
+    'verbose'    => false,
+    'rules'      => null,
+];
+
+for ($i = 2; $i < count($args); $i++) {
+    $arg = $args[$i];
+    if (str_starts_with($arg, '--')) {
+        $parts = explode('=', substr($arg, 2), 2);
+        $key = $parts[0];
+        $val = $parts[1] ?? true;
+        if (array_key_exists($key, $options)) {
+            $options[$key] = $val;
+        } elseif ($key === 'verbose') {
+            $options['verbose'] = true;
+        } elseif ($key === 'no-backup') {
+            $options['no-backup'] = true;
+        } elseif ($key === 'no-perm') {
+            $options['no-perm'] = true;
+        }
+    }
+}
+
+// ----- Auto-detect CMS type -----
+if ($options['type'] === 'auto') {
+    if (file_exists($path . '/wp-config.php') || file_exists($path . '/wp-config-sample.php')) {
+        $options['type'] = 'wordpress';
+    } elseif (file_exists($path . '/artisan') && is_dir($path . '/app')) {
+        $options['type'] = 'laravel';
+    } else {
+        $options['type'] = 'generic';
+    }
+    if ($options['verbose']) {
+        echo "[*] Auto-detected CMS type: {$options['type']}\n";
+    }
+}
+
+// ----- Run Scan -----
+$scanner = new Scanner($path, $options);
+$results = $scanner->run();
+
+// ----- Generate Report -----
+$generator = new ReportGenerator($results);
+$report = $generator->generate();
+
+switch ($options['format']) {
+    case 'json':
+        $formatter = new JsonFormatter();
+        break;
+    case 'html':
+        $formatter = new HtmlFormatter();
+        break;
+    case 'console':
+    default:
+        $formatter = new ConsoleFormatter();
+        break;
+}
+
+$output = $formatter->format($report);
+
+if ($options['output']) {
+    file_put_contents($options['output'], $output);
+    echo "[+] Report saved to: {$options['output']}\n";
+} else {
+    echo $output;
+}
+
+$severity = $report['summary']['critical'] + $report['summary']['high'];
+exit($severity > 0 ? 2 : ($report['summary']['total'] > 0 ? 1 : 0));

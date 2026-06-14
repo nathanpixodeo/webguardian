@@ -1,0 +1,8 @@
+/vendor/
+/composer.lock
+/.phplint-cache
+*.log
+/.webguardian/
+/reports/
+.DS_Store
+Thumbs.db

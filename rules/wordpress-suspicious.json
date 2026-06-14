@@ -1,0 +1,86 @@
+{
+  "version": "1.0.0",
+  "description": "WordPress-specific suspicious patterns and security checks",
+  "updated_at": "2026-06-15",
+  "patterns": [
+    {
+      "id": "wp_suspicious_admin_ajax",
+      "pattern": "wp_ajax_(?:nopriv_)?(?:eval|shell|cmd|exec|backdoor)",
+      "severity": "critical",
+      "type": "wordpress",
+      "message": "Suspicious WordPress AJAX action registered - possible backdoor entry point"
+    },
+    {
+      "id": "wp_mu_plugin_dangerous",
+      "pattern": "eval|base64_decode|exec|shell_exec|system|passthru",
+      "severity": "critical",
+      "type": "wordpress",
+      "context": "mu-plugins",
+      "message": "Must-use plugin contains dangerous functions typically found in malware"
+    },
+    {
+      "id": "wp_options_malware",
+      "pattern": "update_option\\s*\\(\\s*['\"](?:[a-z0-9_]*malware|[a-z0-9_]*shell|[a-z0-9_]*backdoor)",
+      "severity": "critical",
+      "type": "wordpress",
+      "message": "WordPress option being updated with malware/shell/backdoor in key name"
+    },
+    {
+      "id": "wp_plugin_obfuscated",
+      "pattern": "Plugin\\s+Name:\\s*[A-Za-z0-9+\\/=]{50,}",
+      "severity": "high",
+      "type": "wordpress",
+      "message": "Plugin header contains long obfuscated string - disguised malware plugin"
+    },
+    {
+      "id": "wp_db_query_user_input",
+      "pattern": "\\$wpdb->(?:query|get_var|get_row|get_results)\\s*\\([^)]*\\$_",
+      "severity": "critical",
+      "type": "wordpress",
+      "message": "WordPress database query using unsanitized user input - SQL injection"
+    },
+    {
+      "id": "wp_nonce_missing",
+      "pattern": "wp_ajax_(?:nopriv_)?[a-z_]+\\)",
+      "severity": "medium",
+      "type": "wordpress",
+      "message": "AJAX handler registered - verify that nonce verification is implemented"
+    },
+    {
+      "id": "wp_config_exposed_creds",
+      "pattern": "define\\(\\s*['\"]DB_PASSWORD['\"]\\s*,\\s*['\"](?:root|password|admin|123456)['\"]\\s*\\)",
+      "severity": "critical",
+      "type": "wordpress",
+      "message": "Database password in wp-config.php is a known weak/default value"
+    },
+    {
+      "id": "wp_rest_user_enum",
+      "pattern": "rest_user",
+      "severity": "low",
+      "type": "wordpress",
+      "message": "REST API user endpoint - verify user enumeration protection is in place"
+    },
+    {
+      "id": "wp_debug_log",
+      "pattern": "WP_DEBUG_LOG.*true",
+      "severity": "medium",
+      "type": "wordpress",
+      "message": "WP_DEBUG_LOG enabled - debug log may expose sensitive information"
+    },
+    {
+      "id": "wp_file_edit_enabled",
+      "pattern": "DISALLOW_FILE_EDIT",
+      "severity": "medium",
+      "type": "wordpress",
+      "negative": true,
+      "message": "DISALLOW_FILE_EDIT not defined in wp-config.php - plugin/theme editor is enabled"
+    },
+    {
+      "id": "wp_auto_update_disabled",
+      "pattern": "AUTOMATIC_UPDATER_DISABLED.*true",
+      "severity": "medium",
+      "type": "wordpress",
+      "message": "Automatic updates are disabled - security updates must be applied manually"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "version": "1.0.0",
+  "description": "Laravel-specific backdoor and vulnerability patterns",
+  "updated_at": "2026-06-15",
+  "patterns": [
+    {
+      "id": "laravel_env_exposed_key",
+      "pattern": "APP_KEY\\s*=\\s*['\"]?(?:SomeRandomKey|base64:[A-Za-z0-9+\\/]{10,20}=?)['\"]?$",
+      "severity": "critical",
+      "type": "laravel",
+      "message": "APP_KEY is weak or default - encryption/security features are compromised"
+    },
+    {
+      "id": "laravel_debug_true",
+      "pattern": "APP_DEBUG\\s*=\\s*true",
+      "severity": "high",
+      "type": "laravel",
+      "message": "APP_DEBUG is true in .env - sensitive configuration exposed in error pages"
+    },
+    {
+      "id": "laravel_tinker_route",
+      "pattern": "tinker",
+      "severity": "high",
+      "type": "laravel",
+      "message": "Laravel Tinker reference found - ensure it's not exposed in production"
+    },
+    {
+      "id": "laravel_mass_assignment",
+      "pattern": "\\$fillable\\s*=\\s*\\[\\s*'\\*'\\s*\\]",
+      "severity": "high",
+      "type": "laravel",
+      "message": "Mass assignment protection disabled ($fillable = ['*']) - all attributes are mass assignable"
+    },
+    {
+      "id": "laravel_raw_query",
+      "pattern": "DB::(?:select|insert|update|delete|statement)\\s*\\([^)]*\\$_",
+      "severity": "critical",
+      "type": "laravel",
+      "message": "Raw database query with user input - SQL injection vulnerability"
+    },
+    {
+      "id": "laravel_where_raw_input",
+      "pattern": "->whereRaw\\s*\\([^)]*\\$_",
+      "severity": "high",
+      "type": "laravel",
+      "message": "whereRaw() with user input - potential SQL injection if not properly bound"
+    },
+    {
+      "id": "laravel_route_closure_db",
+      "pattern": "Route::(?:get|post|put|patch|delete)\\s*\\([^)]*\\)[^{]*\\{[^}]*DB::",
+      "severity": "medium",
+      "type": "laravel",
+      "message": "Database query in route closure - move to controller for better security and organization"
+    },
+    {
+      "id": "laravel_request_all",
+      "pattern": "\\$request->all\\(\\)",
+      "severity": "medium",
+      "type": "laravel",
+      "message": "Using \$request->all() without validation/filtering - may accept unexpected input"
+    },
+    {
+      "id": "laravel_env_in_public",
+      "pattern": "public\\/\\.env",
+      "severity": "critical",
+      "type": "laravel",
+      "message": ".env file accessible from public directory - credentials exposed"
+    },
+    {
+      "id": "laravel_ignition_exposed",
+      "pattern": "_ignition",
+      "severity": "high",
+      "type": "laravel",
+      "message": "Ignition debug page exposed - CVE-2021-3129 vulnerability if running vulnerable version"
+    }
+  ]
+}
