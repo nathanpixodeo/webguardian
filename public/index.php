@@ -107,6 +107,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['api'])) {
         exit;
     }
 
+    if ($_GET['api'] === 'scan_progress') {
+        $token = $_GET['token'] ?? '';
+        if (!preg_match('/^[a-f0-9]{32}$/', $token)) {
+            echo json_encode(['success' => false, 'error' => 'Invalid token']);
+            exit;
+        }
+        $progressFile = sys_get_temp_dir() . '/webguardian_progress_' . $token . '.json';
+        $outputFile = sys_get_temp_dir() . '/webguardian_result_' . $token . '.json';
+
+        if (file_exists($outputFile)) {
+            $result = json_decode(file_get_contents($outputFile), true);
+            echo json_encode(['success' => true, 'status' => 'completed', 'result' => $result ? true : false]);
+            @unlink($progressFile);
+            exit;
+        }
+
+        if (file_exists($progressFile)) {
+            $progress = json_decode(file_get_contents($progressFile), true);
+            echo json_encode(array_merge(['success' => true], $progress));
+            exit;
+        }
+
+        echo json_encode(['success' => true, 'status' => 'starting', 'phase' => 'starting',
+            'files_scanned' => 0, 'files_skipped' => 0, 'current_file' => '',
+            'findings_count' => 0, 'elapsed_ms' => 0]);
+        exit;
+    }
+
+    if ($_GET['api'] === 'scan_results') {
+        $token = $_GET['token'] ?? '';
+        if (!preg_match('/^[a-f0-9]{32}$/', $token)) {
+            echo json_encode(['success' => false, 'error' => 'Invalid token']);
+            exit;
+        }
+
+        $outputFile = sys_get_temp_dir() . '/webguardian_result_' . $token . '.json';
+
+        if (!file_exists($outputFile)) {
+            echo json_encode(['success' => false, 'error' => 'Results not ready']);
+            exit;
+        }
+
+        $scanResult = json_decode(file_get_contents($outputFile), true);
+        if (!$scanResult) {
+            echo json_encode(['success' => false, 'error' => 'Failed to parse results']);
+            exit;
+        }
+
+        require_once __DIR__ . '/../vendor/autoload.php';
+        $html = renderResultsHtml($scanResult);
+
+        @unlink($outputFile);
+        @unlink(sys_get_temp_dir() . '/webguardian_progress_' . $token . '.json');
+
+        echo json_encode(['success' => true, 'html' => $html]);
+        exit;
+    }
+
     echo json_encode(['success' => false, 'error' => 'Unknown API action']);
     exit;
 }
@@ -291,73 +349,6 @@ if ($_GET['api'] ?? '' === 'start_scan' && $_SERVER['REQUEST_METHOD'] === 'POST'
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['api']) && $_GET['api'] === 'scan_progress') {
-    header('Content-Type: application/json');
-
-    $token = $_GET['token'] ?? '';
-    if (!preg_match('/^[a-f0-9]{32}$/', $token)) {
-        echo json_encode(['success' => false, 'error' => 'Invalid token']);
-        exit;
-    }
-
-    $progressFile = sys_get_temp_dir() . '/webguardian_progress_' . $token . '.json';
-    $outputFile = sys_get_temp_dir() . '/webguardian_result_' . $token . '.json';
-
-    if (file_exists($outputFile)) {
-        $result = json_decode(file_get_contents($outputFile), true);
-        echo json_encode([
-            'success' => true,
-            'status' => 'completed',
-            'result' => $result ? true : false,
-        ]);
-        // Cleanup progress file
-        @unlink($progressFile);
-        exit;
-    }
-
-    if (file_exists($progressFile)) {
-        $progress = json_decode(file_get_contents($progressFile), true);
-        echo json_encode(array_merge(['success' => true], $progress));
-        exit;
-    }
-
-    echo json_encode(['success' => true, 'status' => 'starting', 'phase' => 'starting',
-        'files_scanned' => 0, 'files_skipped' => 0, 'current_file' => '',
-        'findings_count' => 0, 'elapsed_ms' => 0]);
-    exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['api']) && $_GET['api'] === 'scan_results') {
-    header('Content-Type: application/json');
-
-    $token = $_GET['token'] ?? '';
-    if (!preg_match('/^[a-f0-9]{32}$/', $token)) {
-        echo json_encode(['success' => false, 'error' => 'Invalid token']);
-        exit;
-    }
-
-    $outputFile = sys_get_temp_dir() . '/webguardian_result_' . $token . '.json';
-
-    if (!file_exists($outputFile)) {
-        echo json_encode(['success' => false, 'error' => 'Results not ready']);
-        exit;
-    }
-
-    $scanResult = json_decode(file_get_contents($outputFile), true);
-    if (!$scanResult) {
-        echo json_encode(['success' => false, 'error' => 'Failed to parse results']);
-        exit;
-    }
-
-    $html = renderResultsHtml($scanResult);
-
-    // Cleanup temp files
-    @unlink($outputFile);
-    @unlink(sys_get_temp_dir() . '/webguardian_progress_' . $token . '.json');
-
-    echo json_encode(['success' => true, 'html' => $html]);
-    exit;
-}
 
 // ---- Scan Logic (synchronous, for non-JS fallback) ----
 $scanResult = null;
